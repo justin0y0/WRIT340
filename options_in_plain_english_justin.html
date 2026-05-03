@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Options in Plain English &ndash; Justin Yu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .font-display { font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif; }
+    .prose p { margin-bottom: 1.05rem; line-height: 1.75; }
+    .prose p:last-child { margin-bottom: 0; }
+    .label { letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.65rem; font-weight: 500; }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900">
+
+  <!-- Top bar -->
+  <header class="sticky top-0 z-40 border-b border-zinc-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto max-w-5xl px-5 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-md border border-zinc-900 grid place-items-center shrink-0">
+          <span class="font-display text-sm leading-none select-none">JY</span>
+        </div>
+        <div class="leading-tight">
+          <div class="text-[0.8rem] font-semibold tracking-tight">Justin Yu</div>
+          <div class="text-[0.65rem] text-zinc-500 leading-none mt-0.5">Options in Plain English</div>
+        </div>
+      </div>
+      <nav class="hidden sm:flex items-center gap-6 text-[0.7rem] font-medium text-zinc-500">
+        <a href="#intro" class="hover:text-zinc-900 transition-colors">Introduction</a>
+        <a href="#covered-call" class="hover:text-zinc-900 transition-colors">01</a>
+        <a href="#cash-secured-put" class="hover:text-zinc-900 transition-colors">02</a>
+        <a href="#bull-call-spread" class="hover:text-zinc-900 transition-colors">03</a>
+        <a href="#protective-put" class="hover:text-zinc-900 transition-colors">04</a>
+        <a href="#iron-condor" class="hover:text-zinc-900 transition-colors">05</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-5">
+
+    <!-- Hero -->
+    <section id="intro" class="border-b border-zinc-200 py-12 sm:py-16">
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-start">
+        <div>
+          <p class="label text-zinc-400 mb-4">Public Articles Project &nbsp;&middot;&nbsp; WRIT 340 &nbsp;&middot;&nbsp; Spring 2026</p>
+          <h1 class="font-display text-3xl sm:text-4xl lg:text-[2.6rem] leading-[1.1] tracking-tight mb-5">
+            Options in Plain English
+          </h1>
+          <div class="prose text-[0.9rem] text-zinc-700 max-w-xl">
+            <p>
+              Most introductions to options trading occupy two equally unhelpful extremes. One category assumes the reader has never heard of a call option and stops at basic definitions. The other opens with the Black-Scholes partial differential equation and expects you to keep up. Neither version is particularly useful if you already understand how markets work at a conceptual level but want to develop genuine intuition for how these instruments behave in practice.
+            </p>
+            <p>
+              These five pieces try to occupy the middle. Each one covers a single strategy, works through the payoff structure from first principles, and explains the tradeoffs the way I would explain them to someone who reads financial news and understands what a stock is, but has not yet spent much time inside an options chain. The goal is not to teach you to trade. The goal is to make the shapes on the chart feel obvious rather than arbitrary.
+            </p>
+          </div>
+          <p class="mt-5 text-[0.7rem] text-zinc-400">Written by <span class="text-zinc-600 font-medium">Justin Yu</span> &nbsp;&middot;&nbsp; USC Marshall &nbsp;&middot;&nbsp; Los Angeles, CA</p>
+        </div>
+        <aside class="lg:pt-1">
+          <p class="label text-zinc-400 mb-3">Five strategies</p>
+          <ol class="space-y-1.5 text-[0.82rem]">
+            <li>
+              <a href="#covered-call" class="group flex items-start gap-3 rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 hover:border-zinc-800 transition-colors">
+                <span class="label text-zinc-400 group-hover:text-zinc-700 mt-0.5 shrink-0">01</span>
+                <div>
+                  <div class="font-medium text-zinc-900">Covered calls</div>
+                  <div class="text-[0.75rem] text-zinc-500 mt-0.5">Selling upside you do not need in exchange for immediate income.</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#cash-secured-put" class="group flex items-start gap-3 rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 hover:border-zinc-800 transition-colors">
+                <span class="label text-zinc-400 group-hover:text-zinc-700 mt-0.5 shrink-0">02</span>
+                <div>
+                  <div class="font-medium text-zinc-900">Cash-secured puts</div>
+                  <div class="text-[0.75rem] text-zinc-500 mt-0.5">Getting paid to make a purchase commitment you were already willing to make.</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#bull-call-spread" class="group flex items-start gap-3 rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 hover:border-zinc-800 transition-colors">
+                <span class="label text-zinc-400 group-hover:text-zinc-700 mt-0.5 shrink-0">03</span>
+                <div>
+                  <div class="font-medium text-zinc-900">Bull call spreads</div>
+                  <div class="text-[0.75rem] text-zinc-500 mt-0.5">Expressing a bullish view with defined risk and a built-in upside target.</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#protective-put" class="group flex items-start gap-3 rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 hover:border-zinc-800 transition-colors">
+                <span class="label text-zinc-400 group-hover:text-zinc-700 mt-0.5 shrink-0">04</span>
+                <div>
+                  <div class="font-medium text-zinc-900">Protective puts</div>
+                  <div class="text-[0.75rem] text-zinc-500 mt-0.5">Buying a floor under a position you are not yet willing to sell.</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#iron-condor" class="group flex items-start gap-3 rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 hover:border-zinc-800 transition-colors">
+                <span class="label text-zinc-400 group-hover:text-zinc-700 mt-0.5 shrink-0">05</span>
+                <div>
+                  <div class="font-medium text-zinc-900">Iron condors</div>
+                  <div class="text-[0.75rem] text-zinc-500 mt-0.5">Collecting premium by selling volatility that does not materialize.</div>
+                </div>
+              </a>
+            </li>
+          </ol>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ── Article template (repeated 5x) ── -->
+
+    <article id="covered-call" class="py-12 sm:py-14 border-b border-zinc-200">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start">
+        <div class="lg:sticky lg:top-20 space-y-4">
+          <p class="label text-zinc-400">Strategy 01</p>
+          <h2 class="font-display text-2xl sm:text-3xl leading-[1.15] tracking-tight">Covered Calls: Getting Paid While You Wait</h2>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-[0.75rem] border-t border-zinc-100 pt-4">
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Risk profile</dt>
+              <dd class="text-zinc-700">Moderately conservative</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Best for</dt>
+              <dd class="text-zinc-700">Stocks you are content to hold at current prices</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max gain</dt>
+              <dd class="text-zinc-700">Premium + appreciation up to strike</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max loss</dt>
+              <dd class="text-zinc-700">Stock price minus premium collected</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="space-y-5">
+          <figure class="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden">
+            <img src="covered_call.png" alt="Payoff diagram for a covered call: profit is capped above the strike price, with a small premium buffer on the downside." loading="lazy" class="w-full h-auto" />
+          </figure>
+          <div class="prose text-[0.88rem] text-zinc-800">
+            <p>
+              A covered call is a reasonable place to begin thinking about options because it does not require you to take on a new kind of risk. It asks you to give something up instead. The setup is simple: you already own shares of a stock, you expect it to trade in a relatively narrow range over the next month or so, and you would be willing to sell it at a somewhat higher price if that price were reached. Given those conditions, you sell a call option at that higher strike and collect a premium for doing so.
+            </p>
+            <p>
+              The term "covered" refers to the fact that you own the underlying shares. One standard options contract controls one hundred shares, so selling one call against one hundred shares you own means that if the stock rises above the strike price at expiration, you can fulfill your obligation to deliver the shares without buying anything on the open market. This is what distinguishes a covered call from a naked call, which carries theoretically unlimited risk.
+            </p>
+            <p>
+              The payoff diagram makes the tradeoff visible. On the left side of the chart, when the stock declines, your position loses money in roughly the same way a long stock position does, except that the premium you collected shifts the loss curve upward slightly. That small cushion does not protect you from a serious drop, but it does mean your breakeven is fractionally lower than it would be otherwise. On the right side, once the stock moves above the strike price, your payoff flattens out. Every dollar of additional appreciation above the strike goes to the buyer of the call rather than to you.
+            </p>
+            <p>
+              In concrete terms, suppose a stock trades at 100 and you sell a 110-strike call for a three-dollar premium. If the stock sits at 108 at expiration, the call expires worthless and you keep the three dollars of premium plus the eight dollars of stock appreciation, for a total of eleven dollars per share. If the stock reaches 125, you deliver your shares at 110, collect the three-dollar premium, and your total gain is thirteen dollars per share regardless of how far the stock continued to rise. If the stock falls to 85, you lose fifteen dollars on the stock but keep the three-dollar premium, so your net loss is twelve dollars.
+            </p>
+            <p>
+              This is a strategy that tends to appeal to investors who have already decided they would be satisfied selling a position at a certain price. The covered call simply converts that intention into a more structured commitment and compensates them for making it. The two risks worth understanding clearly are that a large downward move will not be meaningfully offset by the premium collected, and that a stock that rises sharply past the strike will produce regret rather than satisfaction if the investor had stronger conviction than the structure implied.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article id="cash-secured-put" class="py-12 sm:py-14 border-b border-zinc-200">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start">
+        <div class="lg:sticky lg:top-20 space-y-4">
+          <p class="label text-zinc-400">Strategy 02</p>
+          <h2 class="font-display text-2xl sm:text-3xl leading-[1.15] tracking-tight">Cash-Secured Puts: Getting Paid to Set Your Buy Price</h2>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-[0.75rem] border-t border-zinc-100 pt-4">
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Risk profile</dt>
+              <dd class="text-zinc-700">Similar to owning the stock from strike price</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Best for</dt>
+              <dd class="text-zinc-700">Patient entries with genuine purchase intent</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max gain</dt>
+              <dd class="text-zinc-700">Premium collected</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max loss</dt>
+              <dd class="text-zinc-700">Strike price minus premium</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="space-y-5">
+          <figure class="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden">
+            <img src="cash_secured_put.png" alt="Payoff diagram for a cash-secured put: profit is capped at the premium received; losses begin below the strike price." loading="lazy" class="w-full h-auto" />
+          </figure>
+          <div class="prose text-[0.88rem] text-zinc-800">
+            <p>
+              A cash-secured put is the structural mirror of a covered call. Rather than owning a stock and selling upside potential you consider excess, here you are waiting for a stock to reach a price at which you would be willing to buy it. The put sale is a mechanism for converting that willingness into a binding commitment while collecting compensation in the interim.
+            </p>
+            <p>
+              The mechanics are as follows. You sell a put option at a strike price that represents your target entry. If the stock closes below that strike at expiration, you will be assigned the shares at that price. If the stock stays above the strike, the put expires worthless and you retain the premium. The "cash-secured" designation means you have the full cost of the potential purchase set aside in your account rather than using margin, which makes this a considerably more conservative version of the same trade.
+            </p>
+            <p>
+              The payoff shape is the key thing to understand. The flat region on the right side of the chart represents the range of outcomes in which the stock finishes above the strike and you simply keep the premium without acquiring the shares. The sloped region on the left reflects the effective cost of ownership if assignment occurs: your net purchase price is the strike minus the premium collected, which means you are acquiring the stock at a slight discount to the level at which you agreed to buy it.
+            </p>
+            <p>
+              The important conceptual point is that this position is economically equivalent to agreeing in advance to buy the stock at a fixed price. The premium receipt is the compensation for making that agreement publicly and in advance. A limit order sitting unexecuted in your brokerage account also reflects a willingness to buy at a specific price, but it does not pay you for that willingness. A cash-secured put does.
+            </p>
+            <p>
+              The risk that needs to be clearly acknowledged is that assignment is not optional. If the stock falls sharply below your strike, you will still be required to purchase at the agreed price. This is why the strategy only makes sense at prices where you have genuine conviction about the stock's long-term value. If you would not be comfortable owning the stock at the strike price under adverse conditions, you should not sell the put at that strike.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article id="bull-call-spread" class="py-12 sm:py-14 border-b border-zinc-200">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start">
+        <div class="lg:sticky lg:top-20 space-y-4">
+          <p class="label text-zinc-400">Strategy 03</p>
+          <h2 class="font-display text-2xl sm:text-3xl leading-[1.15] tracking-tight">Bull Call Spreads: Capping Risk on Directional Bets</h2>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-[0.75rem] border-t border-zinc-100 pt-4">
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Risk profile</dt>
+              <dd class="text-zinc-700">Defined risk, defined reward</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Best for</dt>
+              <dd class="text-zinc-700">Bullish views with a specific price target in mind</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max gain</dt>
+              <dd class="text-zinc-700">Spread width minus net debit paid</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max loss</dt>
+              <dd class="text-zinc-700">Net debit paid</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="space-y-5">
+          <figure class="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden">
+            <img src="bull_call_spread.png" alt="Payoff diagram for a bull call spread: loss is capped at the initial debit; profit is capped at the higher strike." loading="lazy" class="w-full h-auto" />
+          </figure>
+          <div class="prose text-[0.88rem] text-zinc-800">
+            <p>
+              When options on widely traded names are expensive relative to a trader's expected move, a single long call becomes an inefficient instrument. The buyer pays for a range of outcomes, including extreme upside scenarios that carry little probability weight in their actual view. A bull call spread solves this by pairing the long call with a short call at a higher strike, effectively buying a slice of the upside distribution rather than the entire tail.
+            </p>
+            <p>
+              The construction is straightforward. You buy a call at a lower strike and simultaneously sell a call at a higher strike within the same expiration cycle. The premium received from the short call reduces your net cost. In the example reflected in the chart above, the long position is at the 100 strike and the short position is at the 115 strike, with a net debit representing the difference in the two premiums. Your maximum gain is the distance between the strikes minus that debit. Your maximum loss is the debit itself.
+            </p>
+            <p>
+              On the payoff diagram, this structure produces a characteristic shape: a flat loss region when the stock finishes below the lower strike, a rising profit region as the stock moves between the two strikes, and a second flat region once the stock moves above the upper strike. That upper plateau is the ceiling. Any appreciation above 115 belongs to the buyer of the call you sold, not to you.
+            </p>
+            <p>
+              The value of this structure is most apparent when you have a well-defined thesis. If you believe a stock trading at 100 has a reasonable probability of reaching 112 or 115 over the next month but no particular reason to move beyond that, then paying for unlimited upside is inefficient. The spread lets you capture the portion of the move you actually have conviction about while reducing your cost basis and limiting your downside to a known number.
+            </p>
+            <p>
+              The limitation that needs to be understood clearly is timing. Even if your directional thesis is correct, a bull call spread that expires before the stock has moved will still expire worthless. The defined nature of the loss is a genuine benefit, but it does not return your capital just because the story eventually played out. Spreads require both the right direction and enough of that move to occur before expiration.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article id="protective-put" class="py-12 sm:py-14 border-b border-zinc-200">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start">
+        <div class="lg:sticky lg:top-20 space-y-4">
+          <p class="label text-zinc-400">Strategy 04</p>
+          <h2 class="font-display text-2xl sm:text-3xl leading-[1.15] tracking-tight">Protective Puts: Insurance for Positions You Care About</h2>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-[0.75rem] border-t border-zinc-100 pt-4">
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Risk profile</dt>
+              <dd class="text-zinc-700">Long stock with a defined downside floor</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Best for</dt>
+              <dd class="text-zinc-700">Large positions heading into uncertain events</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max gain</dt>
+              <dd class="text-zinc-700">Unlimited (minus premium paid)</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max loss</dt>
+              <dd class="text-zinc-700">Stock price minus strike, plus premium paid</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="space-y-5">
+          <figure class="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden">
+            <img src="protective_put.png" alt="Payoff diagram for a protective put: downside is floored at the strike price, with unlimited upside less the premium cost." loading="lazy" class="w-full h-auto" />
+          </figure>
+          <div class="prose text-[0.88rem] text-zinc-800">
+            <p>
+              A protective put is the most straightforward application of options as a hedging instrument. The position combines a long stock holding with a long put option at a strike below the current price. The put functions as insurance: in exchange for the premium paid, you establish a floor below which further losses in the stock are offset by gains in the option.
+            </p>
+            <p>
+              The payoff diagram illustrates this cleanly. To the left of the strike price, the combined position stops losing value at the rate of the unhedged stock. The put's intrinsic value begins increasing dollar for dollar against the stock's decline, so the net position levels out near the strike. Below that level, you are effectively protected. To the right of the strike, the put expires worthless and your payoff tracks the stock directly, shifted down by the cost of the premium you paid.
+            </p>
+            <p>
+              The insurance analogy is accurate and worth taking seriously. In the same way that car insurance costs money and feels like a waste in years when nothing happens, the protective put premium reduces your total return in scenarios where it was never needed. The question is not whether the premium represents an expected-value gain. It rarely does. The question is whether the certainty of a modest cost is worth more to you than the probability of an outcome you would find genuinely damaging.
+            </p>
+            <p>
+              This tends to make protective puts most rational in two distinct situations. The first is when a position has grown large enough relative to a portfolio that a rapid decline would produce a loss that is material rather than merely uncomfortable. The second is when a specific near-term event creates a concentrated risk window, such as an earnings release or a macroeconomic data point, and the investor wants to maintain their position through that event without full exposure to an adverse outcome.
+            </p>
+            <p>
+              The practical value of the strategy is at least partially psychological. An investor who holds a protective put during a sharp selloff is more likely to make a rational decision about whether to hold or sell because the worst case is already bounded. An investor without that hedge may feel pressure to sell at the worst possible moment to prevent further losses. The premium is, in part, a payment for the ability to remain deliberate rather than reactive.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article id="iron-condor" class="py-12 sm:py-14 border-b border-zinc-200">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start">
+        <div class="lg:sticky lg:top-20 space-y-4">
+          <p class="label text-zinc-400">Strategy 05</p>
+          <h2 class="font-display text-2xl sm:text-3xl leading-[1.15] tracking-tight">Iron Condors: Betting on Boredom</h2>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-[0.75rem] border-t border-zinc-100 pt-4">
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Risk profile</dt>
+              <dd class="text-zinc-700">Defined risk, short volatility</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Best for</dt>
+              <dd class="text-zinc-700">Indexes expected to remain range-bound</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max gain</dt>
+              <dd class="text-zinc-700">Net premium received</dd>
+            </div>
+            <div>
+              <dt class="label text-zinc-400 mb-0.5">Max loss</dt>
+              <dd class="text-zinc-700">Spread width minus premium received</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="space-y-5">
+          <figure class="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden">
+            <img src="iron_condor.png" alt="Payoff diagram for an iron condor: a flat profit zone in the middle flanked by capped loss regions on each side." loading="lazy" class="w-full h-auto" />
+          </figure>
+          <div class="prose text-[0.88rem] text-zinc-800">
+            <p>
+              An iron condor is constructed from two credit spreads: a put spread positioned below the current market and a call spread positioned above it. The structure produces a net credit because you are selling the inner strikes and buying the outer strikes as protection. If the underlying asset finishes between the two short strikes at expiration, all four legs expire worthless and the entire credit is retained. If the asset moves beyond either short strike, the position begins to lose money, with the maximum loss capped by the long options on the outside.
+            </p>
+            <p>
+              The payoff shape is distinctive enough to recognize immediately. A flat profit plateau in the middle of the chart, two sloped transition zones where the profit erodes as the stock approaches either short strike, and two flat loss regions capped by the long strikes on the wings. The strategy is not a bet on direction. It is a bet on the magnitude of movement. Specifically, it is a bet that the realized move in the underlying will be smaller than the move implied by the options prices at the time you sold the spreads.
+            </p>
+            <p>
+              This is what it means to be short volatility. When the options market prices in a large expected range of outcomes, the premiums on the inner strikes are elevated relative to what would be fair if the actual move turns out to be modest. By selling those elevated premiums, the iron condor seller collects compensation that will prove profitable if the market's implied volatility overstated the realized volatility. The outer long strikes cap the risk in the event that the market's estimate turns out to be correct or conservative.
+            </p>
+            <p>
+              The practical risk of this structure is not that the maximum loss is large in dollar terms relative to the premium collected, which it generally is. It is that the expected-value calculation depends heavily on the accuracy of your assumption that implied volatility is overstating future realized moves. In environments where the market's estimates are well-calibrated, or where gap risk from a single event could push the stock outside the condor range overnight, the structure can lose money with a frequency that erodes the occasional premium gains.
+            </p>
+            <p>
+              This is why iron condors tend to perform most consistently on broad equity indexes rather than individual stocks, and in periods when implied volatility readings are clearly elevated relative to recent realized moves rather than in low-volatility environments where there is less premium to collect in the first place. The payoff shape tells you exactly what the strategy requires: a market that does not go very far in either direction before you close the position. The strategy is not passive income. It is a specific volatility forecast expressed as a structured trade with bounded outcomes on both sides.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Footer note -->
+    <section class="py-10 sm:py-12">
+      <div class="max-w-2xl">
+        <p class="label text-zinc-400 mb-3">A note on scope</p>
+        <p class="text-[0.88rem] text-zinc-700 leading-relaxed">
+          These pieces are intended to develop conceptual intuition, not to serve as trading guidance. Each strategy described here involves real financial risk and behaves differently depending on the underlying asset, the expiration timeline, implied volatility conditions, and a range of other factors not addressed here. The payoff diagrams shown reflect idealized behavior at expiration and do not capture the dynamics of positions managed prior to expiration.
+        </p>
+        <p class="mt-4 text-[0.75rem] text-zinc-400">
+          Written by <span class="text-zinc-600">Justin Yu</span> for WRIT 340: Arts &amp; Humanities, USC &nbsp;&middot;&nbsp; Spring 2026
+        </p>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
